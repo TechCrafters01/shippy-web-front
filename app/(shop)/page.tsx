@@ -79,6 +79,8 @@ const PRODUCTS = [
   { id: "6", name: "เคสโทรศัพท์ ใสกันกระแทก", price: 129 },
 ];
 
+const FLASH_SALE_PRICES = [189, 259, 319, 359, 429, 499];
+
 export default function HomePage() {
   return (
     <div className="mx-auto max-w-300 px-4 py-4">
@@ -208,7 +210,7 @@ export default function HomePage() {
                 </span>
               </div>
               <div className="p-2">
-                <p className="text-sm font-semibold text-primary">฿{(Math.random() * 700 + 100).toFixed(0)}</p>
+                <p className="text-sm font-semibold text-primary">฿{FLASH_SALE_PRICES[i]}</p>
                 <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-orange-100">
                   <div className="h-full rounded-full bg-primary" style={{ width: `${30 + i * 10}%` }} />
                 </div>

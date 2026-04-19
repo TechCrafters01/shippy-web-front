@@ -1,10 +1,21 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+
+import { clearAuthSession, getStoredUser } from "@/app/core/services/auth-session";
 
 export default function ShopLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [userName, setUserName] = useState<string | null>(() => getStoredUser()?.name ?? null);
+
+  function handleLogout() {
+    clearAuthSession();
+    setUserName(null);
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f5f5f5]">
@@ -45,8 +56,19 @@ export default function ShopLayout({
                 <span>ช่วยเหลือ</span>
               </div>
               <span className="px-3">🇹🇭 ไทย</span>
-              <Link href="/register" className="px-3 hover:text-white">สมัครใหม่</Link>
-              <Link href="/buyer" className="pl-3 hover:text-white">เข้าสู่ระบบ</Link>
+              {userName ? (
+                <>
+                  <span className="px-3 text-white">{userName}</span>
+                  <button type="button" onClick={handleLogout} className="pl-3 hover:text-white">
+                    ออกจากระบบ
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/register" className="px-3 hover:text-white">สมัครใหม่</Link>
+                  <Link href="/buyer" className="pl-3 hover:text-white">เข้าสู่ระบบ</Link>
+                </>
+              )}
             </div>
           </div>
         </div>

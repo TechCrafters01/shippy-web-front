@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { loginWithPassword } from "@/app/core/services/auth-session";
+
 export default function BuyerLoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -16,20 +18,18 @@ export default function BuyerLoginPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message || "เข้าสู่ระบบไม่สำเร็จ");
+      const result = await loginWithPassword(form.email.trim(), form.password);
+      if (!result.success) {
+        setError(result.message || "เข้าสู่ระบบไม่สำเร็จ");
         return;
       }
       router.push("/");
-    } catch {
-      setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+    } catch (err) {
+      if (err instanceof Error && err.message) {
+        setError(err.message);
+      } else {
+        setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+      }
     } finally {
       setLoading(false);
     }

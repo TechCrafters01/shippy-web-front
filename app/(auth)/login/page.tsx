@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { loginWithPassword } from "@/app/core/services/auth-session";
+
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -17,29 +19,26 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.message || "เข้าสู่ระบบไม่สำเร็จ");
+      const result = await loginWithPassword(form.email.trim(), form.password);
+      if (!result.success) {
+        setError(result.message || "เข้าสู่ระบบไม่สำเร็จ");
         return;
       }
 
       router.push("/");
-    } catch {
-      setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+    } catch (err) {
+      if (err instanceof Error && err.message) {
+        setError(err.message);
+      } else {
+        setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+      }
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="px-[30px] py-[22px]">
+    <div className="px-7.5 py-5.5">
       {/* Card header */}
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl text-[#222]">เข้าสู่ระบบ</h2>
@@ -127,7 +126,7 @@ export default function LoginPage() {
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          className="flex h-[40px] items-center justify-center gap-2 rounded-sm border border-zinc-300 bg-white text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+          className="flex h-10 items-center justify-center gap-2 rounded-sm border border-zinc-300 bg-white text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
         >
           <svg className="h-5 w-5 text-[#1877f2]" fill="currentColor" viewBox="0 0 24 24">
             <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
@@ -136,7 +135,7 @@ export default function LoginPage() {
         </button>
         <button
           type="button"
-          className="flex h-[40px] items-center justify-center gap-2 rounded-sm border border-zinc-300 bg-white text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+          className="flex h-10 items-center justify-center gap-2 rounded-sm border border-zinc-300 bg-white text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
