@@ -16,7 +16,7 @@ export const Local: BaseURL = "http://localhost:4000"
  * Environment returns a BaseURL for calling the cloud environment with the given name.
  */
 export function Environment(name: string): BaseURL {
-    return `https://${name}-76mbo.encr.app`
+    return `https://${name}-2s5tc.encr.app`
 }
 
 /**
@@ -29,7 +29,7 @@ export function PreviewEnv(pr: number | string): BaseURL {
 const BROWSER = typeof globalThis === "object" && ("window" in globalThis);
 
 /**
- * Client is an API client for the 76mbo Encore application.
+ * Client is an API client for the 2s5tc Encore application.
  */
 export default class Client {
     public readonly auth: auth.ServiceClient
@@ -337,7 +337,7 @@ class BaseClient {
         // Add User-Agent header if the script is running in the server
         // because browsers do not allow setting User-Agent headers to requests
         if (!BROWSER) {
-            this.headers["User-Agent"] = "76mbo-Generated-TS-Client (Encore/v1.54.0)";
+            this.headers["User-Agent"] = "2s5tc-Generated-TS-Client (Encore/v1.54.0)";
         }
 
         this.requestInit = options.requestInit ?? {};
